@@ -1,0 +1,4 @@
+set security policies from-zone SRX-TO-BG to-zone Network-Team-Mangement policy SRX-TO-BG-policy-77 match source-address any
+set security policies from-zone SRX-TO-BG to-zone Network-Team-Mangement policy SRX-TO-BG-policy-77 match destination-address 10.12.3.90/32
+set security policies from-zone SRX-TO-BG to-zone Network-Team-Mangement policy SRX-TO-BG-policy-77 match application samba
+set security policies from-zone SRX-TO-BG to-zone Network-Team-Mangement policy SRX-TO-BG-policy-77 then permit
