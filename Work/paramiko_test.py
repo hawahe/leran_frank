@@ -6,9 +6,9 @@ import paramiko,time,os,getpass
 def backup_network(username,password,cmd,ipaddress):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(ipaddress, 22, username, password)
+    ssh.connect(ipaddress,22,username,password,allow_agent=False,look_for_keys=False)
     stdin, stdout, stderr = ssh.exec_command(cmd)
-    f = open('C:\\Users\\zhao\\Desktop\\运维网备份\\%s\\%s.txt' %(time1,ipaddress),'w',encoding='utf8')
+    f = open('C:\\Users\\zhao\\Desktop\\Desktop\\运维网备份\\%s\\%s.txt' %(time1,ipaddress),'w',encoding='utf8')
     a = stdout.readlines()
     for i in a:
         f.write(i)
@@ -29,7 +29,7 @@ ip_list = {"Junos":['10.128.1.1','10.130.1.3'],
                       '10.130.1.1','10.130.1.2','10.130.3.2','10.130.3.3',
                       '10.128.0.2','10.155.1.1','10.157.0.1',
                       '10.154.1.1','10.158.1.1','10.146.1.1','10.144.1.1',
-                      '10.152.1.1','10.149.1.1','10.132.1.1','10.129.31.1'],
+                      '10.152.1.1','10.149.1.1','10.129.31.1'],
            "ISG":['10.157.0.2'],
            "CiscoASA":['10.128.0.26','10.130.0.26','10.157.0.26'],
 }
@@ -49,8 +49,9 @@ while True:
         #cmd_type = cmd[2]
         print('unsupport this type of device!!!')
     elif user_choice.lower() == 'ciscoasa':
-        print('unsupport this type of device!!!')
-        continue
+        cmd_type = cmd[1]
+        #print('unsupport this type of device!!!')
+        #continue
     elif user_choice.lower() == 'q':
         exit()
     else:
@@ -59,10 +60,10 @@ while True:
 
     for ip in ip_list[user_choice]:
 
-        if  os.path.exists('C:\\Users\\zhao\\Desktop\\运维网备份\\%s' %time1):
+        if  os.path.exists('C:\\Users\\zhao\\Desktop\\Desktop\\运维网备份\\%s' %time1):
             backup_network(username,password,cmd_type,ip)
         else:
-            os.mkdir('C:\\Users\\zhao\\Desktop\\运维网备份\\%s' %time1)
+            os.mkdir('C:\\Users\\zhao\\Desktop\\Desktop\\运维网备份\\%s' %time1)
             backup_network(username,password,cmd_type,ip)
 
 
