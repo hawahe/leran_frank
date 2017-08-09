@@ -60,9 +60,9 @@ def junos_policy_verification(hostname,username,password,szone,dzone,protocol,si
 
 
 
-ipaddress = "x.x.x.x"
-username = 'username'
-password = 'password'
+ipaddress = input("ip address for login:")
+username = input("username for login:")
+password = input("password for login:")
 
 Target_ip = r"10\.255\.248\.[0-9]+"
 zone_list = junos_all_zone_list(ipaddress,username,password,"IT-Public-Server")
