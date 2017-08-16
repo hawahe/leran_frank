@@ -31,7 +31,7 @@ def junos_all_zone_list(hostname,username,password,except_zone):
     all_zone = stdout.readlines()
     zone_list = []
     for i in all_zone:
-        if not i.strip().startswith('Zone') or i.strip().startswith(' '):
+        if not i.strip().startswith('Zone'): #or not i.strip().startswith(' ') or not i.strip().startswith('---') or not i.strip().startswith('node') or not i.strip().startswith('zone'):
             zone_name = i.split()
             if zone_name[0] == except_zone:
                 continue
@@ -65,7 +65,7 @@ username = input("username for login:")
 password = input("password for login:")
 
 Target_ip = r"10\.255\.248\.[0-9]+"
-zone_list = junos_all_zone_list(ipaddress,username,password,"IT-Public-Server")
+zone_list = junos_all_zone_list(ipaddress,username,password,"  IT-Public-Server")
 f = open('ASApolicy.txt' , 'r')
 for line in f:
     Source_zone = "IT-Public-Server"
@@ -93,7 +93,7 @@ for line in f:
             else:                                                               #源是迁移地址并且是单个地址
                 source_obj = ASApolicy_list[2]+"/32"
                 if ASApolicy_list[3] == 'any':
-                    Destination_zone = 'SRX-TO-BG'
+                    Destination_zone = '   SRX-TO-BG'
                     destination_obj = 'any'
                 else:
                     Destination_zone = junos_zone_lookup(ipaddress,username,password, ASApolicy_list[3])
@@ -186,7 +186,7 @@ for line in f:
             if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[2]):  # 源是迁移地址并且是网段；
                 source_obj = IPy.IP(ASApolicy_list[2]).make_net(ASApolicy_list[3])
                 if ASApolicy_list[4] == 'any':
-                    Destination_zone = 'SRX-TO-BG'
+                    Destination_zone = '   SRX-TO-BG'
                     destination_obj = 'any'
                 else:
                     Destination_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[4])
