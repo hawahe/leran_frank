@@ -65,7 +65,7 @@ username = input("username for login:")
 password = input("password for login:")
 
 Target_ip = r"10\.255\.248\.[0-9]+"
-zone_list = junos_all_zone_list(ipaddress,username,password,"  IT-Public-Server")
+zone_list = junos_all_zone_list(ipaddress,username,password,"IT-Public-Server")
 f = open('ASApolicy.txt' , 'r')
 for line in f:
     Source_zone = "IT-Public-Server"
@@ -77,15 +77,15 @@ for line in f:
         application_obj_2 = 'any'
         application_obj_3 = 'any'
         if re.match(Target_ip,ASApolicy_list[2]):        #源是迁移地址
-            if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$",ASApolicy_list[2]):                 #源是迁移地址并且是网段；
+            if re.match(r"^255",ASApolicy_list[3]):                 #源是迁移地址并且是网段；
                 source_obj = IPy.IP(ASApolicy_list[2]).make_net(ASApolicy_list[3])
                 if ASApolicy_list[4] == 'any':
                     Destination_zone = 'SRX-TO-BG'
                     destination_obj = 'any'
                 else:
                     Destination_zone = junos_zone_lookup(ipaddress,username,password, ASApolicy_list[4])
-                    if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[4]): #源是迁移地址并且是网段，目的是网段
-                        destination_obj = str(IPy.IP(ASApolicy_list[5]).make_net(ASApolicy_list[6]))
+                    if re.match(r"^255", ASApolicy_list[5]): #源是迁移地址并且是网段，目的是网段
+                        destination_obj = str(IPy.IP(ASApolicy_list[4]).make_net(ASApolicy_list[5]))
                     else :                                                           #源是迁移地址并且是网段，目的是单个地址
                         destination_obj = ASApolicy_list[4]+"/32"
 
@@ -93,11 +93,11 @@ for line in f:
             else:                                                               #源是迁移地址并且是单个地址
                 source_obj = ASApolicy_list[2]+"/32"
                 if ASApolicy_list[3] == 'any':
-                    Destination_zone = '   SRX-TO-BG'
+                    Destination_zone = 'SRX-TO-BG'
                     destination_obj = 'any'
                 else:
                     Destination_zone = junos_zone_lookup(ipaddress,username,password, ASApolicy_list[3])
-                    if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[3]):  # 源是迁移地址并且是单个地址，目的是网段
+                    if re.match(r"^255", ASApolicy_list[4]):  # 源是迁移地址并且是单个地址，目的是网段
                         destination_obj = str(IPy.IP(ASApolicy_list[3]).make_net(ASApolicy_list[4]))
                     else: # 源是迁移地址并且是单个地址，目的是单个地址
                         destination_obj = ASApolicy_list[3] + "/32"
@@ -106,14 +106,14 @@ for line in f:
             if ASApolicy_list[2] == 'any':
                 Source_zone = 'SRX-TO-BG'
                 source_obj = 'any'
-                if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[3]):
+                if re.match(r"^255", ASApolicy_list[4]):
                     destination_obj = IPy.IP(ASApolicy_list[3]).make_net(ASApolicy_list[4])
                 else:
                     destination_obj = ASApolicy_list[3] + "/32"
-            elif re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[2]):
+            elif re.match(r"^255", ASApolicy_list[3]):
                 Source_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[2])
                 source_obj = str(IPy.IP(ASApolicy_list[2]).make_net(ASApolicy_list[3]))
-                if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[4]):
+                if re.match(r"^255", ASApolicy_list[5]):
                     destination_obj = IPy.IP(ASApolicy_list[4]).make_net(ASApolicy_list[5])
                 else:
                     destination_obj = ASApolicy_list[4] + "/32"
@@ -121,7 +121,7 @@ for line in f:
             else:
                 source_obj = ASApolicy_list[2] + "/32"
                 Source_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[2])
-                if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[3]):
+                if re.match(r"^255", ASApolicy_list[4]):
                     destination_obj = IPy.IP(ASApolicy_list[3]).make_net(ASApolicy_list[4])
                 else:
                     destination_obj = ASApolicy_list[3] + "/32"
@@ -131,15 +131,15 @@ for line in f:
         application_obj_2 = 'udp'
         application_obj_3 = ASApolicy_list[-1]
         if re.match(Target_ip, ASApolicy_list[2]):  # 源是迁移地址
-            if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[2]):  # 源是迁移地址并且是网段；
+            if re.match(r"^255", ASApolicy_list[3]):  # 源是迁移地址并且是网段；
                 source_obj = IPy.IP(ASApolicy_list[2]).make_net(ASApolicy_list[3])
                 if ASApolicy_list[4] == 'any':
                     Destination_zone = 'SRX-TO-BG'
                     destination_obj = 'any'
                 else:
                     Destination_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[4])
-                    if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[4]):  # 源是迁移地址并且是网段，目的是网段
-                        destination_obj = str(IPy.IP(ASApolicy_list[5]).make_net(ASApolicy_list[6]))
+                    if re.match(r"^255", ASApolicy_list[5]):  # 源是迁移地址并且是网段，目的是网段
+                        destination_obj = str(IPy.IP(ASApolicy_list[4]).make_net(ASApolicy_list[5]))
                     else:  # 源是迁移地址并且是网段，目的是单个地址
                         destination_obj = ASApolicy_list[4] + "/32"
 
@@ -151,7 +151,7 @@ for line in f:
                     destination_obj = 'any'
                 else:
                     Destination_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[3])
-                    if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[3]):  # 源是迁移地址并且是单个地址，目的是网段
+                    if re.match(r"^255", ASApolicy_list[4]):  # 源是迁移地址并且是单个地址，目的是网段
                         destination_obj = str(IPy.IP(ASApolicy_list[3]).make_net(ASApolicy_list[4]))
                     else:  # 源是迁移地址并且是单个地址，目的是单个地址
                         destination_obj = ASApolicy_list[3] + "/32"
@@ -159,14 +159,14 @@ for line in f:
             if ASApolicy_list[2] == 'any':
                 Source_zone = 'SRX-TO-BG'
                 source_obj = 'any'
-                if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[3]):
+                if re.match(r"^255", ASApolicy_list[4]):
                     destination_obj = IPy.IP(ASApolicy_list[3]).make_net(ASApolicy_list[4])
                 else:
                     destination_obj = ASApolicy_list[3] + "/32"
-            elif re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[2]):
+            elif re.match(r"^255", ASApolicy_list[3]):
                 Source_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[2])
                 source_obj = str(IPy.IP(ASApolicy_list[2]).make_net(ASApolicy_list[3]))
-                if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[4]):
+                if re.match(r"^255", ASApolicy_list[5]):
                     destination_obj = IPy.IP(ASApolicy_list[4]).make_net(ASApolicy_list[5])
                 else:
                     destination_obj = ASApolicy_list[4] + "/32"
@@ -174,7 +174,7 @@ for line in f:
             else:
                 source_obj = ASApolicy_list[2] + "/32"
                 Source_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[2])
-                if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[3]):
+                if re.match(r"^255", ASApolicy_list[4]):
                     destination_obj = IPy.IP(ASApolicy_list[3]).make_net(ASApolicy_list[4])
                 else:
                     destination_obj = ASApolicy_list[3] + "/32"
@@ -183,15 +183,15 @@ for line in f:
         application_obj_2 = 'tcp'
         application_obj_3 = ASApolicy_list[-1]
         if re.match(Target_ip, ASApolicy_list[2]):  # 源是迁移地址
-            if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[2]):  # 源是迁移地址并且是网段；
+            if re.match(r"^255", ASApolicy_list[3]):  # 源是迁移地址并且是网段；
                 source_obj = IPy.IP(ASApolicy_list[2]).make_net(ASApolicy_list[3])
                 if ASApolicy_list[4] == 'any':
                     Destination_zone = '   SRX-TO-BG'
                     destination_obj = 'any'
                 else:
                     Destination_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[4])
-                    if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[4]):  # 源是迁移地址并且是网段，目的是网段
-                        destination_obj = str(IPy.IP(ASApolicy_list[5]).make_net(ASApolicy_list[6]))
+                    if re.match(r"^255", ASApolicy_list[5]):  # 源是迁移地址并且是网段，目的是网段
+                        destination_obj = str(IPy.IP(ASApolicy_list[4]).make_net(ASApolicy_list[5]))
                     else:  # 源是迁移地址并且是网段，目的是单个地址
                         destination_obj = ASApolicy_list[4] + "/32"
 
@@ -203,7 +203,7 @@ for line in f:
                     destination_obj = 'any'
                 else:
                     Destination_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[3])
-                    if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[3]):  # 源是迁移地址并且是单个地址，目的是网段
+                    if re.match(r"^255", ASApolicy_list[4]):  # 源是迁移地址并且是单个地址，目的是网段
                         destination_obj = str(IPy.IP(ASApolicy_list[3]).make_net(ASApolicy_list[4]))
                     else:  # 源是迁移地址并且是单个地址，目的是单个地址
                         destination_obj = ASApolicy_list[3] + "/32"
@@ -211,14 +211,14 @@ for line in f:
             if ASApolicy_list[2] == 'any':
                 Source_zone = 'SRX-TO-BG'
                 source_obj = 'any'
-                if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[3]):
+                if re.match(r"^255", ASApolicy_list[4]):
                     destination_obj = IPy.IP(ASApolicy_list[3]).make_net(ASApolicy_list[4])
                 else:
                     destination_obj = ASApolicy_list[3] + "/32"
-            elif re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[2]):
+            elif re.match(r"^255", ASApolicy_list[3]):
                 Source_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[2])
                 source_obj = str(IPy.IP(ASApolicy_list[2]).make_net(ASApolicy_list[3]))
-                if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[4]):
+                if re.match(r"^255", ASApolicy_list[5]):
                     destination_obj = IPy.IP(ASApolicy_list[4]).make_net(ASApolicy_list[5])
                 else:
                     destination_obj = ASApolicy_list[4] + "/32"
@@ -226,7 +226,7 @@ for line in f:
             else:
                 Source_zone = junos_zone_lookup(ipaddress, username, password, ASApolicy_list[2])
                 source_obj = ASApolicy_list[2] + "/32"
-                if re.match(r"[0-9]+\.[0-9]+\.[0-9]+\.0$", ASApolicy_list[3]):
+                if re.match(r"^255", ASApolicy_list[4]):
                     destination_obj = IPy.IP(ASApolicy_list[3]).make_net(ASApolicy_list[4])
                 else:
                     destination_obj = ASApolicy_list[3] + "/32"
